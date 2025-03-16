@@ -4,6 +4,7 @@ import com.example.springbootlearning.studentapi.exception.StudentNotFoundExcept
 import com.example.springbootlearning.studentapi.model.Student;
 import com.example.springbootlearning.studentapi.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +15,8 @@ public class StudentService {
 
     @Autowired
     private final StudentRepository studentRepository;
-
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
@@ -66,6 +68,11 @@ public class StudentService {
 
 
         return students;
+    }
+
+    public Student registerStudent(Student student) {
+        student.setPassword(passwordEncoder.encode(student.getPassword()));
+        return studentRepository.save(student);
     }
 
 }
